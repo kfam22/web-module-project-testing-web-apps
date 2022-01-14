@@ -11,20 +11,32 @@ test('renders without errors', ()=>{
 
 test('renders the contact form header', ()=> {
     render(<ContactForm/>);
-    // the header h1 element exists. Include three asserts, if the header is in the document, if the heads is truthy, if the header has the correct text content
+    // the header h1 element exists. Include three asserts, if the header is in the document, if the heads is truthy, if the header has the correct test content
     const header = screen.queryByText(/contact form/i);
     expect(header).toBeInTheDocument();
     expect(header).toBeTruthy();
     expect(header).toHaveTextContent(/contact form/i);
 });
 
-// test('renders ONE error message if user enters less then 5 characters into firstname.', async () => {
-    
-// });
+test('renders ONE error message if user enters less then 5 characters into firstname.', async () => {
+    render(<ContactForm/>);
 
-// test('renders THREE error messages if user enters no values into any fields.', async () => {
+    const firstName = screen.getByLabelText('First Name*');
+    userEvent.type(firstName, 'al');
+
+    const errormsg = await screen.findAllByTestId('error');
+    expect(errormsg).toHaveLength(1);
+});
+
+test('renders THREE error messages if user enters no values into any fields.', async () => {
+    render(<ContactForm/>);
+
+    const clickSubmit = screen.getByRole('button');
+    userEvent.click(clickSubmit);
     
-// });
+    const errormsg = await screen.findAllByTestId('error');
+    expect(errormsg).toHaveLength(3);
+});
 
 // test('renders ONE error message if user enters a valid first name and last name but no email.', async () => {
     
